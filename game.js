@@ -11,7 +11,7 @@ const translations = {
         startLabel: 'INICIAR',
         instructionsTitle: 'INSTRUÇÕES',
         inst1: 'Use SETA ESQUERDA, SETA DIREITA e SETA PARA BAIXO para controlar os 3 flippers',
-        inst2: 'Pressione ESPAÇO para lançar a bola',
+        inst2: 'A bola inicia automaticamente',
         inst3: 'Em dispositivos móveis, toque nos botões na tela',
         inst4: 'Acerte os alvos neon para ganhar pontos',
         inst5: 'Evite perder a bola na parte inferior',
@@ -33,7 +33,7 @@ const translations = {
         startLabel: 'START',
         instructionsTitle: 'INSTRUCTIONS',
         inst1: 'Use LEFT, RIGHT and DOWN ARROW keys to control the 3 flippers',
-        inst2: 'Press SPACE to launch the ball',
+        inst2: 'Ball launches automatically',
         inst3: 'On mobile devices, tap the on-screen buttons',
         inst4: 'Hit neon targets to score points',
         inst5: 'Avoid losing the ball at the bottom',
@@ -55,7 +55,7 @@ const translations = {
         startLabel: 'INICIAR',
         instructionsTitle: 'INSTRUCCIONES',
         inst1: 'Use las teclas FLECHA IZQUIERDA, FLECHA DERECHA y FLECHA ABAJO para controlar los 3 flippers',
-        inst2: 'Presione ESPACIO para lanzar la bola',
+        inst2: 'La bola se inicia automáticamente',
         inst3: 'En dispositivos móviles, toque los botones en la pantalla',
         inst4: 'Golpee los objetivos neón para ganar puntos',
         inst5: 'Evite perder la bola en la parte inferior',
@@ -77,7 +77,7 @@ const translations = {
         startLabel: 'DÉMARRER',
         instructionsTitle: 'INSTRUCTIONS',
         inst1: 'Utilisez les touches FLÈCHE GAUCHE, FLÈCHE DROITE et FLÈCHE BAS pour contrôler les 3 flippers',
-        inst2: 'Appuyez sur ESPACE pour lancer la balle',
+        inst2: 'La balle se lance automatiquement',
         inst3: 'Sur les appareils mobiles, appuyez sur les boutons à l\'écran',
         inst4: 'Frappez les cibles néon pour marquer des points',
         inst5: 'Évitez de perdre la balle en bas',
@@ -99,7 +99,7 @@ const translations = {
         startLabel: 'START',
         instructionsTitle: 'ANLEITUNG',
         inst1: 'Verwenden Sie die PFEIL LINKS, PFEIL RECHTS und PFEIL UNTEN Tasten um die 3 Flipper zu steuern',
-        inst2: 'Drücken Sie LEERTASTE um den Ball zu starten',
+        inst2: 'Der Ball startet automatisch',
         inst3: 'Auf mobilen Geräten tippen Sie auf die Bildschirmtasten',
         inst4: 'Treffen Sie Neon-Ziele um Punkte zu erzielen',
         inst5: 'Vermeiden Sie es den Ball unten zu verlieren',
@@ -121,7 +121,7 @@ const translations = {
         startLabel: 'INIZIA',
         instructionsTitle: 'ISTRUZIONI',
         inst1: 'Usa i tasti FRECCIA SINISTRA, FRECCIA DESTRA e FRECCIA GIÙ per controllare i 3 flipper',
-        inst2: 'Premi SPAZIO per lanciare la palla',
+        inst2: 'La palla si avvia automaticamente',
         inst3: 'Sui dispositivi mobili, tocca i pulsanti sullo schermo',
         inst4: 'Colpisci i bersagli al neon per segnare punti',
         inst5: 'Evita di perdere la palla in basso',
@@ -143,7 +143,7 @@ const translations = {
         startLabel: 'スタート',
         instructionsTitle: '説明',
         inst1: '左矢印、右矢印、下矢印キーを使用して3つのフリッパーを制御します',
-        inst2: 'スペースキーを押してボールを発射します',
+        inst2: 'ボールは自動的に発射されます',
         inst3: 'モバイルデバイスでは、画面上のボタンをタップします',
         inst4: 'ネオンターゲットに当ててポイントを獲得します',
         inst5: '下部でボールを失わないようにします',
@@ -165,7 +165,7 @@ const translations = {
         startLabel: '开始',
         instructionsTitle: '说明',
         inst1: '使用左箭头、右箭头和下箭头键控制3个挡板',
-        inst2: '按空格键发射球',
+        inst2: '球会自动发射',
         inst3: '在移动设备上，点击屏幕按钮',
         inst4: '击中霓虹目标获得分数',
         inst5: '避免在底部失去球',
@@ -187,7 +187,7 @@ const translations = {
         startLabel: 'СТАРТ',
         instructionsTitle: 'ИНСТРУКЦИИ',
         inst1: 'Используйте клавиши СТРЕЛКА ВЛЕВО, СТРЕЛКА ВПРАВО и СТРЕЛКА ВНИЗ для управления 3 флипперами',
-        inst2: 'Нажмите ПРОБЕЛ для запуска шара',
+        inst2: 'Мяч запускается автоматически',
         inst3: 'На мобильных устройствах нажимайте кнопки на экране',
         inst4: 'Попадайте в неоновые цели для получения очков',
         inst5: 'Избегайте потери шара внизу',
@@ -209,7 +209,7 @@ const translations = {
         startLabel: 'ابدأ',
         instructionsTitle: 'التعليمات',
         inst1: 'استخدم مفاتيح السهم الأيسر والسهم الأيمن والسهم السفلي للتحكم في الزعانف الثلاثة',
-        inst2: 'اضغط على مسافة لإطلاق الكرة',
+        inst2: 'تُطلق الكرة تلقائيًا',
         inst3: 'على الأجهزة المحمولة، انقر على الأزرار الموجودة على الشاشة',
         inst4: 'اصطدم بالأهداف النيون للحصول على نقاط',
         inst5: 'تجنب فقدان الكرة في الأسفل',
@@ -273,6 +273,7 @@ function playSound(type) {
             oscillator.start(now);
             oscillator.stop(now + 0.2);
             break;
+
             
         case 'wall':
             oscillator.type = 'triangle';
@@ -339,14 +340,7 @@ volumeControl.addEventListener('input', (e) => {
     backgroundMusic.volume = masterVolume;
 });
 
-// Controle de tempo de lançamento
-const launchTimer = document.getElementById('launchTimer');
-const launchTimerValue = document.getElementById('launchTimerValue');
 
-launchTimer.addEventListener('input', (e) => {
-    gameState.launchDelay = parseFloat(e.target.value);
-    launchTimerValue.textContent = e.target.value + 's';
-});
 
 // Configuração do Canvas
 const canvas = document.getElementById('gameCanvas');
@@ -368,6 +362,16 @@ let bumpers = [
     }
 ];
 
+// Launcher (plunger) - bola pode entrar aqui e ser lançada com Espaço
+let launcher = {
+    x: canvas.width - 40,
+    y: canvas.height - 60,
+    width: 32,
+    height: 56,
+    color: '#00FFFF',
+    inUse: false
+};
+
 // Configuração responsiva do canvas
 function resizeCanvas() {
     const container = document.querySelector('.game-container');
@@ -382,6 +386,12 @@ function resizeCanvas() {
     bumpers[0].y = canvas.height * 0.55;
     bumpers[1].x = canvas.width - 40;
     bumpers[1].y = canvas.height * 0.55;
+
+    // Atualizar posição do launcher
+    if (typeof launcher !== 'undefined') {
+        launcher.x = canvas.width - 40;
+        launcher.y = canvas.height - 60;
+    }
 }
 
 resizeCanvas();
@@ -394,7 +404,7 @@ let gameState = {
     highScore: localStorage.getItem('highScore') || 0,
     gameActive: false,
     currentLanguage: 'pt',
-    launchDelay: 0
+
 };
 
 // Bola (caveira em chamas)
@@ -461,6 +471,9 @@ function createTargets() {
 }
 
 createTargets();
+
+// túnel removido (feature deletada)
+
 
 // Detecção automática de idioma
 function detectLanguage() {
@@ -686,6 +699,8 @@ function drawBumper(bumper) {
 }
 
 // Física do jogo
+// Desenhar túnel (entrada e saída)
+
 function updatePhysics() {
     if (!gameState.gameActive) return;
     
@@ -709,6 +724,7 @@ function updatePhysics() {
         playSound('wall');
     }
     
+
     // Perder a bola
     if (ball.y > canvas.height + ball.radius) {
         playSound('lose');
@@ -777,6 +793,31 @@ function updatePhysics() {
             playSound('hit');
         }
     });
+
+    // Capturar a bola no launcher se ela entrar na área inferior e estiver descendo
+    if (typeof launcher !== 'undefined' && !ball.inLauncher && ball.vy > 0) {
+        const lx = launcher.x;
+        const ly = launcher.y;
+        const left = lx - launcher.width/2;
+        const right = lx + launcher.width/2;
+        const top = ly - launcher.height/2;
+        const bottom = ly + launcher.height/2;
+        if (ball.x > left && ball.x < right && (ball.y + ball.radius) > top && (ball.y - ball.radius) < bottom) {
+            // Capturar
+            ball.inLauncher = true;
+            ball.vx = 0;
+            ball.vy = 0;
+            ball.x = lx;
+            ball.y = top - ball.radius + 2;
+            playSound('launch');
+        }
+    }
+
+    // Se a bola estiver no launcher, mantê-la fixada na posição
+    if (ball.inLauncher) {
+        ball.x = launcher.x;
+        ball.y = launcher.y - launcher.height/2 - ball.radius + 2;
+    }
     
     // Colisão com flippers
     checkFlipperCollision(leftFlipper);
@@ -787,6 +828,9 @@ function updatePhysics() {
     leftFlipper.angle += (leftFlipper.targetAngle - leftFlipper.angle) * 0.2;
     rightFlipper.angle += (rightFlipper.targetAngle - rightFlipper.angle) * 0.2;
     centerFlipper.angle += (centerFlipper.targetAngle - centerFlipper.angle) * 0.2;
+
+
+
 }
 
 function checkFlipperCollision(flipper) {
@@ -805,6 +849,29 @@ function checkFlipperCollision(flipper) {
     }
 }
 
+// Desenhar launcher (plunger)
+function drawLauncher() {
+    const lx = launcher.x;
+    const ly = launcher.y;
+    ctx.save();
+    ctx.fillStyle = launcher.color;
+    ctx.strokeStyle = '#003333';
+    ctx.lineWidth = 2;
+    // corpo do launcher
+    ctx.beginPath();
+    ctx.roundRect(lx - launcher.width/2, ly - launcher.height/2, launcher.width, launcher.height, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // indicador de instrução
+    if (ball.inLauncher) {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Press SPACE to launch', lx, ly - launcher.height/2 - 10);
+    }
+    ctx.restore();
+
 // Resetar bola
 function resetBall() {
     ball.x = canvas.width * 0.5;
@@ -812,28 +879,9 @@ function resetBall() {
     ball.vx = 0;
     ball.vy = 0;
     ball.launched = false;
+    ball.inLauncher = false;
 }
 
-// Lançar bola
-function launchBall() {
-    if (!ball.launched && gameState.gameActive) {
-        if (gameState.launchDelay > 0) {
-            setTimeout(() => {
-                if (gameState.gameActive && !ball.launched) {
-                    ball.vy = -7.0;
-                    ball.vx = (Math.random() - 0.5) * 2.5;
-                    ball.launched = true;
-                    playSound('launch');
-                }
-            }, gameState.launchDelay * 1000);
-        } else {
-            ball.vy = -7.0;
-            ball.vx = (Math.random() - 0.5) * 2.5;
-            ball.launched = true;
-            playSound('launch');
-        }
-    }
-}
 
 // Iniciar jogo
 function startGame() {
@@ -891,8 +939,13 @@ function render() {
     drawFlipper(leftFlipper, true);
     drawFlipper(rightFlipper, false);
     drawFlipper(centerFlipper, false);
-    
-    // Desenhar bola
+
+    // Desenhar launcher
+    if (typeof launcher !== 'undefined') {
+        drawLauncher();
+    }    
+
+    // Desenhar bola (se estiver subindo, manter visível)
     drawSkullBall(ball.x, ball.y, ball.radius);
     
     // Atualizar física
@@ -933,10 +986,19 @@ document.addEventListener('keydown', (e) => {
         centerFlipper.active = true;
         playSound('flipper');
     }
+
+    // Espaço: lançar a bola se estiver no launcher
     if (e.code === 'Space') {
-        e.preventDefault();
-        launchBall();
+        if (gameState.gameActive && ball.inLauncher) {
+            e.preventDefault();
+            ball.inLauncher = false;
+            ball.launched = true;
+            ball.vy = -10.5;
+            ball.vx = (Math.random() - 0.5) * 2.5;
+            playSound('launch');
+        }
     }
+
 });
 
 document.addEventListener('keyup', (e) => {
@@ -1008,8 +1070,6 @@ rightBtn.addEventListener('touchend', (e) => {
 startBtn.addEventListener('click', () => {
     if (!gameState.gameActive) {
         startGame();
-    } else {
-        launchBall();
     }
 });
 
