@@ -375,11 +375,13 @@ let launcher = {
 // Configuração responsiva do canvas
 function resizeCanvas() {
     const container = document.querySelector('.game-container');
-    const maxWidth = Math.min(700, window.innerWidth - 40);
-    const maxHeight = window.innerHeight * 0.7;
+    // Usar largura do container para preencher melhor a área disponível e aumentar o máximo
+    // Garantir um mínimo razoável para telas pequenas, sem forçar overflow
+    const maxWidth = Math.min(920, Math.max(360, window.innerWidth - 40, container.clientWidth - 20));
+    const maxHeight = window.innerHeight * 0.78;
     
     canvas.width = maxWidth;
-    canvas.height = Math.min(maxHeight, maxWidth * 1.5);
+    canvas.height = Math.min(maxHeight, Math.round(maxWidth * 1.3));
     
     // Atualizar posição dos bumpers (altura intermediária)
     bumpers[0].x = 40;
@@ -868,9 +870,11 @@ function drawLauncher() {
         ctx.fillStyle = '#ffffff';
         ctx.font = '12px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('Press SPACE to launch', lx, ly - launcher.height/2 - 10);
+        const hint = (translations[gameState.currentLanguage] && translations[gameState.currentLanguage].inst2) ? translations[gameState.currentLanguage].inst2 : 'Press SPACE to launch';
+        ctx.fillText(hint, lx, ly - launcher.height/2 - 10);
     }
     ctx.restore();
+}
 
 // Resetar bola
 function resetBall() {
@@ -890,7 +894,27 @@ function startGame() {
     gameState.gameActive = true;
     createTargets();
     resetBall();
+
+    // Colocar a bola no launcher para começar imediatamente
+    ball.inLauncher = true;
+    // Lançamento automático após pequeno atraso (corresponde à mensagem "A bola inicia automaticamente")
+    setTimeout(() => {
+        if (gameState.gameActive && ball.inLauncher) {
+            ball.inLauncher = false;
+            ball.launched = true;
+            ball.vy = -10.5;
+            ball.vx = (Math.random() - 0.5) * 2.5;
+            playSound('launch');
+        }
+    }, 400);
+
     updateUI();
+
+    // Desativar botão iniciar enquanto o jogo estiver ativo
+    if (typeof startBtn !== 'undefined' && startBtn) {
+        startBtn.disabled = true;
+        startBtn.textContent = translations[gameState.currentLanguage] ? translations[gameState.currentLanguage].startLabel + '…' : 'INICIAR…';
+    }
     
     // Iniciar música de fundo
     if (backgroundMusic.paused) {
@@ -917,6 +941,13 @@ function endGame() {
     }
     
     updateUI();
+
+    // Reativar botão iniciar
+    if (typeof startBtn !== 'undefined' && startBtn) {
+        startBtn.disabled = false;
+        startBtn.textContent = translations[gameState.currentLanguage] ? translations[gameState.currentLanguage].startLabel : 'INICIAR';
+    }
+
     setTimeout(() => {
         alert(translations[gameState.currentLanguage].gameOver + '\n' + 
               translations[gameState.currentLanguage].scoreLabel + ': ' + gameState.score);
