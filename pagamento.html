@@ -43,7 +43,9 @@
         }
 
         .pix-form,
-        .cartao-form {
+        .cartao-form,
+        .debito-form,
+        .boleto-form {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -51,7 +53,9 @@
         }
 
         .pix-form label,
-        .cartao-form label {
+        .cartao-form label,
+        .debito-form label,
+        .boleto-form label {
             text-align: left;
             font-weight: bold;
             color: #111;
@@ -60,6 +64,8 @@
 
         .pix-form input,
         .cartao-form input,
+        .debito-form input,
+        .boleto-form input,
         .forma-pagamento select {
             width: 100%;
             padding: 14px;
@@ -71,6 +77,8 @@
 
         .pix-form input:focus,
         .cartao-form input:focus,
+        .debito-form input:focus,
+        .boleto-form input:focus,
         .forma-pagamento select:focus {
             border-color: #111827;
         }
@@ -227,13 +235,15 @@
 <body>
     <div class="container">
         <h1 class="titulo">Pagamento</h1>
-        <p class="subtitulo">Escolha PIX ou Cartão de Crédito para confirmar o pagamento e liberar o jogo.</p>
+        <p class="subtitulo">Escolha PIX, Cartão de Crédito, Débito ou Boleto para confirmar o pagamento e liberar o jogo.</p>
 
         <div class="forma-pagamento">
             <label for="metodoPagamento">Método de pagamento</label>
             <select id="metodoPagamento">
                 <option value="pix">PIX</option>
                 <option value="cartao">Cartão de Crédito</option>
+                <option value="debito">Cartão de Débito</option>
+                <option value="boleto">Boleto Bancário</option>
             </select>
         </div>
 
@@ -256,6 +266,31 @@
             <input id="cartaoCvv" type="password" placeholder="3 ou 4 dígitos" autocomplete="off" maxlength="4">
         </div>
 
+        <div id="debitoForm" class="debito-form oculto">
+            <label for="debitoNumero">Número do cartão de débito</label>
+            <input id="debitoNumero" type="text" placeholder="Apenas números" autocomplete="off" maxlength="19">
+
+            <label for="debitoNome">Nome no cartão</label>
+            <input id="debitoNome" type="text" placeholder="Nome completo" autocomplete="off">
+
+            <label for="debitoValidade">Validade (MM/AA)</label>
+            <input id="debitoValidade" type="text" placeholder="MM/AA" autocomplete="off" maxlength="5">
+
+            <label for="debitoCvv">CVV</label>
+            <input id="debitoCvv" type="password" placeholder="3 ou 4 dígitos" autocomplete="off" maxlength="4">
+        </div>
+
+        <div id="boletoForm" class="boleto-form oculto">
+            <label for="boletoNome">Nome completo</label>
+            <input id="boletoNome" type="text" placeholder="Nome completo" autocomplete="off">
+
+            <label for="boletoCpf">CPF (somente números)</label>
+            <input id="boletoCpf" type="text" placeholder="11 dígitos" autocomplete="off" maxlength="11">
+
+            <label for="boletoEmail">E-mail para envio do boleto</label>
+            <input id="boletoEmail" type="email" placeholder="email@exemplo.com" autocomplete="off">
+        </div>
+
         <div id="erroPagamento">Dados de pagamento inválidos. Verifique os campos e tente novamente.</div>
 
         <button id="btnPagamento">💳 Confirmar Pagamento 💳</button>
@@ -268,11 +303,20 @@
         const metodoPagamento = document.getElementById('metodoPagamento');
         const pixForm = document.getElementById('pixForm');
         const cartaoForm = document.getElementById('cartaoForm');
+        const debitoForm = document.getElementById('debitoForm');
+        const boletoForm = document.getElementById('boletoForm');
         const pixKey = document.getElementById('pixKey');
         const cartaoNumero = document.getElementById('cartaoNumero');
         const cartaoNome = document.getElementById('cartaoNome');
         const cartaoValidade = document.getElementById('cartaoValidade');
         const cartaoCvv = document.getElementById('cartaoCvv');
+        const debitoNumero = document.getElementById('debitoNumero');
+        const debitoNome = document.getElementById('debitoNome');
+        const debitoValidade = document.getElementById('debitoValidade');
+        const debitoCvv = document.getElementById('debitoCvv');
+        const boletoNome = document.getElementById('boletoNome');
+        const boletoCpf = document.getElementById('boletoCpf');
+        const boletoEmail = document.getElementById('boletoEmail');
         const erroPagamento = document.getElementById('erroPagamento');
         const mensagem = document.getElementById('mensagem');
         const redirecionando = document.getElementById('redirecionando');
@@ -288,11 +332,11 @@
             return emailRegex.test(valor) || telefoneRegex.test(valor) || cpfCnpjRegex.test(valor) || aleatoriaRegex.test(valor);
         }
 
-        function cartaoValido() {
-            const numero = cartaoNumero.value.replace(/\D/g, '');
-            const nome = cartaoNome.value.trim();
-            const validade = cartaoValidade.value.trim();
-            const cvv = cartaoCvv.value.trim();
+        function dadosCartaoValidos(numeroCampo, nomeCampo, validadeCampo, cvvCampo) {
+            const numero = numeroCampo.value.replace(/\D/g, '');
+            const nome = nomeCampo.value.trim();
+            const validade = validadeCampo.value.trim();
+            const cvv = cvvCampo.value.trim();
 
             const numeroOk = /^\d{13,19}$/.test(numero);
             const nomeOk = nome.length >= 5;
@@ -302,12 +346,26 @@
             return numeroOk && nomeOk && validadeOk && cvvOk;
         }
 
+        function boletoValido() {
+            const nome = boletoNome.value.trim();
+            const cpf = boletoCpf.value.replace(/\D/g, '');
+            const email = boletoEmail.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            const nomeOk = nome.length >= 5;
+            const cpfOk = /^\d{11}$/.test(cpf);
+            const emailOk = emailRegex.test(email);
+
+            return nomeOk && cpfOk && emailOk;
+        }
+
         function atualizarFormularioPagamento() {
             const metodo = metodoPagamento.value;
-            const pixSelecionado = metodo === 'pix';
 
-            pixForm.classList.toggle('oculto', !pixSelecionado);
-            cartaoForm.classList.toggle('oculto', pixSelecionado);
+            pixForm.classList.toggle('oculto', metodo !== 'pix');
+            cartaoForm.classList.toggle('oculto', metodo !== 'cartao');
+            debitoForm.classList.toggle('oculto', metodo !== 'debito');
+            boletoForm.classList.toggle('oculto', metodo !== 'boleto');
             erroPagamento.style.display = 'none';
         }
 
@@ -327,12 +385,28 @@
                     pixKey.focus();
                     return;
                 }
-            } else {
-                pagamentoValido = cartaoValido();
+            } else if (metodo === 'cartao') {
+                pagamentoValido = dadosCartaoValidos(cartaoNumero, cartaoNome, cartaoValidade, cartaoCvv);
                 if (!pagamentoValido) {
                     erroPagamento.textContent = 'Informe os dados do cartão corretamente para continuar.';
                     erroPagamento.style.display = 'block';
                     cartaoNumero.focus();
+                    return;
+                }
+            } else if (metodo === 'debito') {
+                pagamentoValido = dadosCartaoValidos(debitoNumero, debitoNome, debitoValidade, debitoCvv);
+                if (!pagamentoValido) {
+                    erroPagamento.textContent = 'Informe os dados do cartão de débito corretamente para continuar.';
+                    erroPagamento.style.display = 'block';
+                    debitoNumero.focus();
+                    return;
+                }
+            } else if (metodo === 'boleto') {
+                pagamentoValido = boletoValido();
+                if (!pagamentoValido) {
+                    erroPagamento.textContent = 'Informe nome, CPF e e-mail válidos para gerar o boleto.';
+                    erroPagamento.style.display = 'block';
+                    boletoNome.focus();
                     return;
                 }
             }
@@ -349,6 +423,13 @@
             cartaoNome.disabled = true;
             cartaoValidade.disabled = true;
             cartaoCvv.disabled = true;
+            debitoNumero.disabled = true;
+            debitoNome.disabled = true;
+            debitoValidade.disabled = true;
+            debitoCvv.disabled = true;
+            boletoNome.disabled = true;
+            boletoCpf.disabled = true;
+            boletoEmail.disabled = true;
             mensagem.classList.add('mostrar');
             redirecionando.style.display = 'block';
             localStorage.setItem('compraAprovada', 'true');
@@ -358,11 +439,32 @@
             if (metodo === 'pix') {
                 localStorage.setItem('compraPixKey', chaveInformada.trim());
                 localStorage.removeItem('compraCartaoFinal');
+                localStorage.removeItem('compraDebitoFinal');
+                localStorage.removeItem('compraBoletoEmail');
             } else {
-                const numeroLimpo = cartaoNumero.value.replace(/\D/g, '');
-                const finalCartao = numeroLimpo.slice(-4);
-                localStorage.setItem('compraCartaoFinal', finalCartao);
                 localStorage.removeItem('compraPixKey');
+
+                if (metodo === 'cartao') {
+                    const numeroLimpo = cartaoNumero.value.replace(/\D/g, '');
+                    const finalCartao = numeroLimpo.slice(-4);
+                    localStorage.setItem('compraCartaoFinal', finalCartao);
+                    localStorage.removeItem('compraDebitoFinal');
+                    localStorage.removeItem('compraBoletoEmail');
+                }
+
+                if (metodo === 'debito') {
+                    const numeroLimpoDebito = debitoNumero.value.replace(/\D/g, '');
+                    const finalDebito = numeroLimpoDebito.slice(-4);
+                    localStorage.setItem('compraDebitoFinal', finalDebito);
+                    localStorage.removeItem('compraCartaoFinal');
+                    localStorage.removeItem('compraBoletoEmail');
+                }
+
+                if (metodo === 'boleto') {
+                    localStorage.setItem('compraBoletoEmail', boletoEmail.value.trim());
+                    localStorage.removeItem('compraCartaoFinal');
+                    localStorage.removeItem('compraDebitoFinal');
+                }
             }
 
             setTimeout(function() {
