@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento do Jogo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #90EE90;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Arial Black', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        #btnPagamento {
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 32px;
+            font-weight: bold;
+            padding: 30px 60px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 
+                0 0 10px #fff,
+                0 0 20px #fff,
+                0 0 30px #fff,
+                0 0 40px #fff,
+                0 0 70px #fff,
+                0 0 80px #fff,
+                0 0 100px #fff;
+            transition: all 0.3s ease;
+            animation: pulseWhite 2s infinite;
+        }
+
+        #btnPagamento:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 0 20px #fff,
+                0 0 30px #fff,
+                0 0 40px #fff,
+                0 0 50px #fff,
+                0 0 80px #fff,
+                0 0 90px #fff,
+                0 0 120px #fff;
+        }
+
+        @keyframes pulseWhite {
+            0%, 100% {
+                box-shadow: 
+                    0 0 10px #fff,
+                    0 0 20px #fff,
+                    0 0 30px #fff,
+                    0 0 40px #fff,
+                    0 0 70px #fff,
+                    0 0 80px #fff,
+                    0 0 100px #fff;
+            }
+            50% {
+                box-shadow: 
+                    0 0 20px #fff,
+                    0 0 30px #fff,
+                    0 0 40px #fff,
+                    0 0 60px #fff,
+                    0 0 90px #fff,
+                    0 0 110px #fff,
+                    0 0 140px #fff;
+            }
+        }
+
+        #mensagem {
+            display: none;
+            font-size: 72px;
+            font-weight: bold;
+            color: #8B0000;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-top: 50px;
+            text-shadow: 
+                0 0 10px #8B0000,
+                0 0 20px #8B0000,
+                0 0 30px #8B0000,
+                0 0 40px #8B0000,
+                0 0 70px #8B0000,
+                0 0 80px #8B0000,
+                0 0 100px #8B0000,
+                0 0 150px #8B0000;
+            animation: neonRed 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes neonRed {
+            from {
+                text-shadow: 
+                    0 0 10px #8B0000,
+                    0 0 20px #8B0000,
+                    0 0 30px #8B0000,
+                    0 0 40px #8B0000,
+                    0 0 70px #8B0000,
+                    0 0 80px #8B0000,
+                    0 0 100px #8B0000,
+                    0 0 150px #8B0000;
+            }
+            to {
+                text-shadow: 
+                    0 0 5px #8B0000,
+                    0 0 10px #8B0000,
+                    0 0 15px #8B0000,
+                    0 0 20px #8B0000,
+                    0 0 35px #8B0000,
+                    0 0 40px #8B0000,
+                    0 0 50px #8B0000,
+                    0 0 75px #8B0000;
+            }
+        }
+
+        .mostrar {
+            display: block !important;
+            animation: aparecer 0.5s ease-in;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .ocultar {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="btnPagamento">💳 Pagamento 💳</button>
+        <div id="mensagem">OBRIGADO PELO PAGAMENTO</div>
+        <div id="redirecionando" style="display:none; margin-top:20px; font-size:22px; color:#000; font-weight:bold;">Redirecionando para o jogo...</div>
+    </div>
+
+    <script>
+        const btnPagamento = document.getElementById('btnPagamento');
+        const mensagem = document.getElementById('mensagem');
+        const redirecionando = document.getElementById('redirecionando');
+
+        btnPagamento.addEventListener('click', function() {
+            btnPagamento.classList.add('ocultar');
+            mensagem.classList.add('mostrar');
+            redirecionando.style.display = 'block';
+
+            setTimeout(function() {
+                window.location.href = 'jogo.html';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

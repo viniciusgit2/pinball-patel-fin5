@@ -1,0 +1,8 @@
+Este jogo de pinball tem um custo simbólico de R$ 20,00 e deve ser jogado no computador ou notebook.
+
+Instruções do jogo:
+- Abra o arquivo index.html em um navegador.
+- O jogo funciona em qualquer sistema operacional com navegador moderno.
+- Não é recomendado para celular/iPhone.
+- Antes de jogar, é necessário realizar o pagamento.
+- Não delete os outros arquivos, pois eles são necessários para o funcionamento do jogo.
