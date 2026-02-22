@@ -23,6 +23,58 @@
 
         .container {
             text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 92%;
+        }
+
+        .titulo {
+            font-size: 36px;
+            margin-bottom: 12px;
+            color: #111;
+        }
+
+        .subtitulo {
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: #1f2937;
+        }
+
+        .pix-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .pix-form label {
+            text-align: left;
+            font-weight: bold;
+            color: #111;
+            font-size: 16px;
+        }
+
+        .pix-form input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid #d1d5db;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .pix-form input:focus {
+            border-color: #111827;
+        }
+
+        #erroPix {
+            display: none;
+            text-align: left;
+            color: #b91c1c;
+            font-weight: bold;
+            font-size: 14px;
         }
 
         #btnPagamento {
@@ -151,22 +203,55 @@
 </head>
 <body>
     <div class="container">
-        <button id="btnPagamento">💳 Pagamento 💳</button>
+        <h1 class="titulo">Pagamento PIX</h1>
+        <p class="subtitulo">Informe sua chave PIX para confirmar o pagamento e liberar o jogo.</p>
+
+        <div class="pix-form">
+            <label for="pixKey">Sua chave PIX</label>
+            <input id="pixKey" type="text" placeholder="CPF, CNPJ, e-mail, telefone ou chave aleatória" autocomplete="off">
+            <div id="erroPix">Informe uma chave PIX válida para continuar.</div>
+        </div>
+
+        <button id="btnPagamento">💳 Confirmar Pagamento PIX 💳</button>
         <div id="mensagem">OBRIGADO PELO PAGAMENTO</div>
         <div id="redirecionando" style="display:none; margin-top:20px; font-size:22px; color:#000; font-weight:bold;">Redirecionando para o jogo...</div>
     </div>
 
     <script>
         const btnPagamento = document.getElementById('btnPagamento');
+        const pixKey = document.getElementById('pixKey');
+        const erroPix = document.getElementById('erroPix');
         const mensagem = document.getElementById('mensagem');
         const redirecionando = document.getElementById('redirecionando');
 
+        function chavePixValida(chave) {
+            const valor = chave.trim();
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const telefoneRegex = /^\+?\d{10,13}$/;
+            const cpfCnpjRegex = /^\d{11}$|^\d{14}$/;
+            const aleatoriaRegex = /^[A-Za-z0-9-]{20,}$/;
+
+            return emailRegex.test(valor) || telefoneRegex.test(valor) || cpfCnpjRegex.test(valor) || aleatoriaRegex.test(valor);
+        }
+
         btnPagamento.addEventListener('click', function() {
+            const chaveInformada = pixKey.value;
+
+            if (!chavePixValida(chaveInformada)) {
+                erroPix.style.display = 'block';
+                pixKey.focus();
+                return;
+            }
+
+            erroPix.style.display = 'none';
             btnPagamento.classList.add('ocultar');
+            pixKey.disabled = true;
             mensagem.classList.add('mostrar');
             redirecionando.style.display = 'block';
             localStorage.setItem('compraAprovada', 'true');
             localStorage.setItem('compraData', new Date().toISOString());
+            localStorage.setItem('compraPixKey', chaveInformada.trim());
 
             setTimeout(function() {
                 window.location.href = 'jogo.html';
