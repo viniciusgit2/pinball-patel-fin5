@@ -254,30 +254,30 @@
 
         <div id="cartaoForm" class="cartao-form oculto">
             <label for="cartaoNumero">Número do cartão</label>
-            <input id="cartaoNumero" type="text" placeholder="Apenas números" autocomplete="off" maxlength="19">
+            <input id="cartaoNumero" type="text" placeholder="Apenas números" autocomplete="off" maxlength="23" inputmode="numeric">
 
             <label for="cartaoNome">Nome no cartão</label>
             <input id="cartaoNome" type="text" placeholder="Nome completo" autocomplete="off">
 
             <label for="cartaoValidade">Validade (MM/AA)</label>
-            <input id="cartaoValidade" type="text" placeholder="MM/AA" autocomplete="off" maxlength="5">
+            <input id="cartaoValidade" type="text" placeholder="MM/AA" autocomplete="off" maxlength="5" inputmode="numeric">
 
             <label for="cartaoCvv">CVV</label>
-            <input id="cartaoCvv" type="password" placeholder="3 ou 4 dígitos" autocomplete="off" maxlength="4">
+            <input id="cartaoCvv" type="password" placeholder="3 ou 4 dígitos" autocomplete="off" maxlength="4" inputmode="numeric">
         </div>
 
         <div id="debitoForm" class="debito-form oculto">
             <label for="debitoNumero">Número do cartão de débito</label>
-            <input id="debitoNumero" type="text" placeholder="Apenas números" autocomplete="off" maxlength="19">
+            <input id="debitoNumero" type="text" placeholder="Apenas números" autocomplete="off" maxlength="23" inputmode="numeric">
 
             <label for="debitoNome">Nome no cartão</label>
             <input id="debitoNome" type="text" placeholder="Nome completo" autocomplete="off">
 
             <label for="debitoValidade">Validade (MM/AA)</label>
-            <input id="debitoValidade" type="text" placeholder="MM/AA" autocomplete="off" maxlength="5">
+            <input id="debitoValidade" type="text" placeholder="MM/AA" autocomplete="off" maxlength="5" inputmode="numeric">
 
             <label for="debitoCvv">CVV</label>
-            <input id="debitoCvv" type="password" placeholder="3 ou 4 dígitos" autocomplete="off" maxlength="4">
+            <input id="debitoCvv" type="password" placeholder="3 ou 4 dígitos" autocomplete="off" maxlength="4" inputmode="numeric">
         </div>
 
         <div id="boletoForm" class="boleto-form oculto">
@@ -285,7 +285,7 @@
             <input id="boletoNome" type="text" placeholder="Nome completo" autocomplete="off">
 
             <label for="boletoCpf">CPF (somente números)</label>
-            <input id="boletoCpf" type="text" placeholder="11 dígitos" autocomplete="off" maxlength="11">
+            <input id="boletoCpf" type="text" placeholder="000.000.000-00" autocomplete="off" maxlength="14" inputmode="numeric">
 
             <label for="boletoEmail">E-mail para envio do boleto</label>
             <input id="boletoEmail" type="email" placeholder="email@exemplo.com" autocomplete="off">
@@ -359,6 +359,31 @@
             return nomeOk && cpfOk && emailOk;
         }
 
+        function aplicarMascaraCartao(valor) {
+            const apenasNumeros = valor.replace(/\D/g, '').slice(0, 19);
+            return apenasNumeros.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+        }
+
+        function aplicarMascaraValidade(valor) {
+            const apenasNumeros = valor.replace(/\D/g, '').slice(0, 4);
+            if (apenasNumeros.length <= 2) {
+                return apenasNumeros;
+            }
+            return apenasNumeros.slice(0, 2) + '/' + apenasNumeros.slice(2);
+        }
+
+        function aplicarMascaraCpf(valor) {
+            const apenasNumeros = valor.replace(/\D/g, '').slice(0, 11);
+            if (apenasNumeros.length <= 3) return apenasNumeros;
+            if (apenasNumeros.length <= 6) return apenasNumeros.replace(/(\d{3})(\d+)/, '$1.$2');
+            if (apenasNumeros.length <= 9) return apenasNumeros.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
+            return apenasNumeros.replace(/(\d{3})(\d{3})(\d{3})(\d+)/, '$1.$2.$3-$4');
+        }
+
+        function aplicarSomenteNumeros(campo, tamanhoMaximo) {
+            campo.value = campo.value.replace(/\D/g, '').slice(0, tamanhoMaximo);
+        }
+
         function atualizarFormularioPagamento() {
             const metodo = metodoPagamento.value;
 
@@ -371,6 +396,34 @@
 
         metodoPagamento.addEventListener('change', atualizarFormularioPagamento);
         atualizarFormularioPagamento();
+
+        cartaoNumero.addEventListener('input', function() {
+            cartaoNumero.value = aplicarMascaraCartao(cartaoNumero.value);
+        });
+
+        debitoNumero.addEventListener('input', function() {
+            debitoNumero.value = aplicarMascaraCartao(debitoNumero.value);
+        });
+
+        cartaoValidade.addEventListener('input', function() {
+            cartaoValidade.value = aplicarMascaraValidade(cartaoValidade.value);
+        });
+
+        debitoValidade.addEventListener('input', function() {
+            debitoValidade.value = aplicarMascaraValidade(debitoValidade.value);
+        });
+
+        cartaoCvv.addEventListener('input', function() {
+            aplicarSomenteNumeros(cartaoCvv, 4);
+        });
+
+        debitoCvv.addEventListener('input', function() {
+            aplicarSomenteNumeros(debitoCvv, 4);
+        });
+
+        boletoCpf.addEventListener('input', function() {
+            boletoCpf.value = aplicarMascaraCpf(boletoCpf.value);
+        });
 
         btnPagamento.addEventListener('click', function() {
             const metodo = metodoPagamento.value;
