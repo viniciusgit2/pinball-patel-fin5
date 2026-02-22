@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Pinball patelfin 5</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        if (localStorage.getItem('compraAprovada') !== 'true') {
+            window.location.replace('pagamento.html');
+        }
+    </script>
 </head>
 <body>
     <div class="container">

@@ -165,6 +165,8 @@
             btnPagamento.classList.add('ocultar');
             mensagem.classList.add('mostrar');
             redirecionando.style.display = 'block';
+            localStorage.setItem('compraAprovada', 'true');
+            localStorage.setItem('compraData', new Date().toISOString());
 
             setTimeout(function() {
                 window.location.href = 'jogo.html';
