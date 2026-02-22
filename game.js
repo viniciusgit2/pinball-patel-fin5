@@ -423,7 +423,7 @@ let ball = {
 let leftFlipper = {
     x: canvas.width * 0.25,
     y: canvas.height - 50,
-    width: 80,
+    width: 100,
     height: 15,
     angle: -0.3,
     targetAngle: -0.3,
@@ -433,7 +433,7 @@ let leftFlipper = {
 let rightFlipper = {
     x: canvas.width * 0.75,
     y: canvas.height - 50,
-    width: 80,
+    width: 100,
     height: 15,
     angle: 0.3,
     targetAngle: 0.3,
@@ -443,7 +443,7 @@ let rightFlipper = {
 let centerFlipper = {
     x: canvas.width * 0.5,
     y: canvas.height - 80,
-    width: 70,
+    width: 90,
     height: 15,
     angle: 0,
     targetAngle: 0,
