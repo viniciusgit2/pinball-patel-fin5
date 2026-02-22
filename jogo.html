@@ -70,6 +70,9 @@
                 <button id="startBtn" class="start-btn">
                     <span id="startLabel">INICIAR</span>
                 </button>
+                <button id="logoutCompraBtn" class="start-btn" style="margin-left:10px;">
+                    SAIR / LIMPAR COMPRA
+                </button>
             </div>
 
         </div>
@@ -97,5 +100,16 @@
     </audio>
 
     <script src="game.js"></script>
+    <script>
+        const logoutCompraBtn = document.getElementById('logoutCompraBtn');
+
+        if (logoutCompraBtn) {
+            logoutCompraBtn.addEventListener('click', function() {
+                localStorage.removeItem('compraAprovada');
+                localStorage.removeItem('compraData');
+                window.location.href = 'pagamento.html';
+            });
+        }
+    </script>
 </body>
 </html>
