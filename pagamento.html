@@ -42,21 +42,25 @@
             color: #1f2937;
         }
 
-        .pix-form {
+        .pix-form,
+        .cartao-form {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 22px;
         }
 
-        .pix-form label {
+        .pix-form label,
+        .cartao-form label {
             text-align: left;
             font-weight: bold;
             color: #111;
             font-size: 16px;
         }
 
-        .pix-form input {
+        .pix-form input,
+        .cartao-form input,
+        .forma-pagamento select {
             width: 100%;
             padding: 14px;
             border-radius: 10px;
@@ -65,11 +69,30 @@
             outline: none;
         }
 
-        .pix-form input:focus {
+        .pix-form input:focus,
+        .cartao-form input:focus,
+        .forma-pagamento select:focus {
             border-color: #111827;
         }
 
-        #erroPix {
+        .forma-pagamento {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .forma-pagamento label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #111;
+            font-size: 16px;
+        }
+
+        .oculto {
+            display: none;
+        }
+
+        #erroPagamento {
             display: none;
             text-align: left;
             color: #b91c1c;
@@ -203,24 +226,54 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="titulo">Pagamento PIX</h1>
-        <p class="subtitulo">Informe sua chave PIX para confirmar o pagamento e liberar o jogo.</p>
+        <h1 class="titulo">Pagamento</h1>
+        <p class="subtitulo">Escolha PIX ou Cartão de Crédito para confirmar o pagamento e liberar o jogo.</p>
 
-        <div class="pix-form">
-            <label for="pixKey">Sua chave PIX</label>
-            <input id="pixKey" type="text" placeholder="CPF, CNPJ, e-mail, telefone ou chave aleatória" autocomplete="off">
-            <div id="erroPix">Informe uma chave PIX válida para continuar.</div>
+        <div class="forma-pagamento">
+            <label for="metodoPagamento">Método de pagamento</label>
+            <select id="metodoPagamento">
+                <option value="pix">PIX</option>
+                <option value="cartao">Cartão de Crédito</option>
+            </select>
         </div>
 
-        <button id="btnPagamento">💳 Confirmar Pagamento PIX 💳</button>
+        <div id="pixForm" class="pix-form">
+            <label for="pixKey">Sua chave PIX</label>
+            <input id="pixKey" type="text" placeholder="CPF, CNPJ, e-mail, telefone ou chave aleatória" autocomplete="off">
+        </div>
+
+        <div id="cartaoForm" class="cartao-form oculto">
+            <label for="cartaoNumero">Número do cartão</label>
+            <input id="cartaoNumero" type="text" placeholder="Apenas números" autocomplete="off" maxlength="19">
+
+            <label for="cartaoNome">Nome no cartão</label>
+            <input id="cartaoNome" type="text" placeholder="Nome completo" autocomplete="off">
+
+            <label for="cartaoValidade">Validade (MM/AA)</label>
+            <input id="cartaoValidade" type="text" placeholder="MM/AA" autocomplete="off" maxlength="5">
+
+            <label for="cartaoCvv">CVV</label>
+            <input id="cartaoCvv" type="password" placeholder="3 ou 4 dígitos" autocomplete="off" maxlength="4">
+        </div>
+
+        <div id="erroPagamento">Dados de pagamento inválidos. Verifique os campos e tente novamente.</div>
+
+        <button id="btnPagamento">💳 Confirmar Pagamento 💳</button>
         <div id="mensagem">OBRIGADO PELO PAGAMENTO</div>
         <div id="redirecionando" style="display:none; margin-top:20px; font-size:22px; color:#000; font-weight:bold;">Redirecionando para o jogo...</div>
     </div>
 
     <script>
         const btnPagamento = document.getElementById('btnPagamento');
+        const metodoPagamento = document.getElementById('metodoPagamento');
+        const pixForm = document.getElementById('pixForm');
+        const cartaoForm = document.getElementById('cartaoForm');
         const pixKey = document.getElementById('pixKey');
-        const erroPix = document.getElementById('erroPix');
+        const cartaoNumero = document.getElementById('cartaoNumero');
+        const cartaoNome = document.getElementById('cartaoNome');
+        const cartaoValidade = document.getElementById('cartaoValidade');
+        const cartaoCvv = document.getElementById('cartaoCvv');
+        const erroPagamento = document.getElementById('erroPagamento');
         const mensagem = document.getElementById('mensagem');
         const redirecionando = document.getElementById('redirecionando');
 
@@ -235,23 +288,82 @@
             return emailRegex.test(valor) || telefoneRegex.test(valor) || cpfCnpjRegex.test(valor) || aleatoriaRegex.test(valor);
         }
 
-        btnPagamento.addEventListener('click', function() {
-            const chaveInformada = pixKey.value;
+        function cartaoValido() {
+            const numero = cartaoNumero.value.replace(/\D/g, '');
+            const nome = cartaoNome.value.trim();
+            const validade = cartaoValidade.value.trim();
+            const cvv = cartaoCvv.value.trim();
 
-            if (!chavePixValida(chaveInformada)) {
-                erroPix.style.display = 'block';
-                pixKey.focus();
+            const numeroOk = /^\d{13,19}$/.test(numero);
+            const nomeOk = nome.length >= 5;
+            const validadeOk = /^(0[1-9]|1[0-2])\/(\d{2})$/.test(validade);
+            const cvvOk = /^\d{3,4}$/.test(cvv);
+
+            return numeroOk && nomeOk && validadeOk && cvvOk;
+        }
+
+        function atualizarFormularioPagamento() {
+            const metodo = metodoPagamento.value;
+            const pixSelecionado = metodo === 'pix';
+
+            pixForm.classList.toggle('oculto', !pixSelecionado);
+            cartaoForm.classList.toggle('oculto', pixSelecionado);
+            erroPagamento.style.display = 'none';
+        }
+
+        metodoPagamento.addEventListener('change', atualizarFormularioPagamento);
+        atualizarFormularioPagamento();
+
+        btnPagamento.addEventListener('click', function() {
+            const metodo = metodoPagamento.value;
+            const chaveInformada = pixKey.value;
+            let pagamentoValido = false;
+
+            if (metodo === 'pix') {
+                pagamentoValido = chavePixValida(chaveInformada);
+                if (!pagamentoValido) {
+                    erroPagamento.textContent = 'Informe uma chave PIX válida para continuar.';
+                    erroPagamento.style.display = 'block';
+                    pixKey.focus();
+                    return;
+                }
+            } else {
+                pagamentoValido = cartaoValido();
+                if (!pagamentoValido) {
+                    erroPagamento.textContent = 'Informe os dados do cartão corretamente para continuar.';
+                    erroPagamento.style.display = 'block';
+                    cartaoNumero.focus();
+                    return;
+                }
+            }
+
+            if (!pagamentoValido) {
                 return;
             }
 
-            erroPix.style.display = 'none';
+            erroPagamento.style.display = 'none';
             btnPagamento.classList.add('ocultar');
+            metodoPagamento.disabled = true;
             pixKey.disabled = true;
+            cartaoNumero.disabled = true;
+            cartaoNome.disabled = true;
+            cartaoValidade.disabled = true;
+            cartaoCvv.disabled = true;
             mensagem.classList.add('mostrar');
             redirecionando.style.display = 'block';
             localStorage.setItem('compraAprovada', 'true');
             localStorage.setItem('compraData', new Date().toISOString());
-            localStorage.setItem('compraPixKey', chaveInformada.trim());
+            localStorage.setItem('compraMetodo', metodo);
+
+            if (metodo === 'pix') {
+                localStorage.setItem('compraPixKey', chaveInformada.trim());
+                localStorage.removeItem('compraCartaoFinal');
+            } else {
+                const numeroLimpo = cartaoNumero.value.replace(/\D/g, '');
+                const finalCartao = numeroLimpo.slice(-4);
+                localStorage.setItem('compraCartaoFinal', finalCartao);
+                localStorage.removeItem('compraPixKey');
+            }
 
             setTimeout(function() {
                 window.location.href = 'jogo.html';
