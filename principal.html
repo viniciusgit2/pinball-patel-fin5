@@ -118,6 +118,17 @@
         .cta:hover {
             background: #000;
         }
+
+        .status-compra {
+            display: none;
+            margin: 0 0 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: #e8f7e8;
+            border: 1px solid #9bd39b;
+            color: #1f6d1f;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -147,6 +158,7 @@ obs: sou autista e vlw por visitar minha pagina</div>
 
         <section id="jogo" class="card">
             <h2>Apresentação do jogo</h2>
+            <div id="statusCompra" class="status-compra">✅ Compra confirmada neste navegador</div>
             <div class="content-box">Este jogo de pinball tem um custo simbólico de R$ 20,00 e deve ser jogado no computador ou notebook.
 
 Instruções do jogo:
@@ -160,5 +172,12 @@ meu email para contato caso necessario é 4xv6patelfin@gmail.com</div>
             <a class="cta" href="pagamento.html" style="margin-left:10px;">Abrir Jogo (pago)</a>
         </section>
     </main>
+
+    <script>
+        const statusCompra = document.getElementById('statusCompra');
+        if (statusCompra && localStorage.getItem('compraAprovada') === 'true') {
+            statusCompra.style.display = 'block';
+        }
+    </script>
 </body>
 </html>
