@@ -26,7 +26,7 @@ Este projeto já está organizado com separação de conteúdo:
 3. Vá em **Settings** > **Pages** e selecione **GitHub Actions**.
 4. O workflow `Deploy GitHub Pages` vai publicar automaticamente.
 5. URL gratuita final:
-   - `https://SEU-USUARIO.github.io/pinball-patel-fin5/`
+   - `https://viniciusgit2.github.io/pinball-patel-fin5/`
 
 ## Sobre domínio `.com.br`
 Importante para “sem custos adicionais”:
@@ -45,10 +45,10 @@ Importante para “sem custos adicionais”:
 5. Aguarde propagação DNS (até 24h).
 
 ### Cenário B: Registro.br + GitHub Pages
-1. Publique no GitHub Pages e confirme que abre no endereço `https://SEU-USUARIO.github.io/NOME-REPO/`.
+1. Publique no GitHub Pages e confirme que abre no endereço `https://viniciusgit2.github.io/pinball-patel-fin5/`.
 2. No repositório, em **Settings** > **Pages**, adicione domínio customizado `www.viniciusgames.com.br`.
 3. No Registro.br, em **DNS**, configure:
-   - Tipo `CNAME` | Nome `www` | Valor: `SEU-USUARIO.github.io`
+   - Tipo `CNAME` | Nome `www` | Valor: `viniciusgit2.github.io`
    - Tipo `A` | Nome `@` | Valor: `185.199.108.153`
    - Tipo `A` | Nome `@` | Valor: `185.199.109.153`
    - Tipo `A` | Nome `@` | Valor: `185.199.110.153`
@@ -58,7 +58,7 @@ Importante para “sem custos adicionais”:
 ### 100% gratuito (sem pagar domínio)
 Use uma destas URLs:
 - Netlify: `https://viniciusgames.netlify.app` (se disponível)
-- GitHub Pages: `https://SEU-USUARIO.github.io/pinball-patel-fin5/`
+- GitHub Pages: `https://viniciusgit2.github.io/pinball-patel-fin5/`
 
 ## Observação importante
 - O arquivo `dados-bancarios.json` está ignorado no Git (`.gitignore`), então não vai para o GitHub.
