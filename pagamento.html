@@ -42,6 +42,13 @@
             color: #1f2937;
         }
 
+        .preco {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #111;
+            font-weight: bold;
+        }
+
         .pix-form,
         .cartao-form,
         .debito-form,
@@ -236,6 +243,7 @@
     <div class="container">
         <h1 class="titulo">Pagamento</h1>
         <p class="subtitulo">Escolha PIX, Cartão de Crédito, Débito ou Boleto para confirmar o pagamento e liberar o jogo.</p>
+        <p class="preco">Valor fixo: R$ 20,00</p>
 
         <div class="forma-pagamento">
             <label for="metodoPagamento">Método de pagamento</label>
@@ -293,7 +301,7 @@
 
         <div id="erroPagamento">Dados de pagamento inválidos. Verifique os campos e tente novamente.</div>
 
-        <button id="btnPagamento">💳 Confirmar Pagamento 💳</button>
+        <button id="btnPagamento">💳 Confirmar Pagamento - R$ 20,00 💳</button>
         <div id="mensagem">OBRIGADO PELO PAGAMENTO</div>
         <div id="redirecionando" style="display:none; margin-top:20px; font-size:22px; color:#000; font-weight:bold;">Redirecionando para o jogo...</div>
     </div>
@@ -488,6 +496,7 @@
             localStorage.setItem('compraAprovada', 'true');
             localStorage.setItem('compraData', new Date().toISOString());
             localStorage.setItem('compraMetodo', metodo);
+            localStorage.setItem('compraValor', '20.00');
 
             if (metodo === 'pix') {
                 localStorage.setItem('compraPixKey', chaveInformada.trim());
