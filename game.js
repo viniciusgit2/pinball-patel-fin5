@@ -419,6 +419,21 @@ let ball = {
     launched: false
 };
 
+const LAUNCH_VERTICAL_SPEED = -13.5;
+const LAUNCH_HORIZONTAL_VARIATION = 3.2;
+const FLIPPER_VERTICAL_BOOST = -13.2;
+const FLIPPER_HORIZONTAL_BOOST = 0.35;
+
+function launchBallFromLauncher() {
+    if (!gameState.gameActive || !ball.inLauncher) return;
+
+    ball.inLauncher = false;
+    ball.launched = true;
+    ball.vy = LAUNCH_VERTICAL_SPEED;
+    ball.vx = (Math.random() - 0.5) * LAUNCH_HORIZONTAL_VARIATION;
+    playSound('launch');
+}
+
 // Flippers
 let leftFlipper = {
     x: canvas.width * 0.25,
@@ -462,7 +477,7 @@ function createTargets() {
         for (let col = 0; col < cols; col++) {
             targets.push({
                 x: spacing * (col + 1),
-                y: 100 + row * 60,
+                y: 130 + row * 60,
                 radius: 20,
                 hit: false,
                 hitTimer: 0,
@@ -652,7 +667,7 @@ function drawTarget(target) {
     ctx.font = 'bold 12px Courier New';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(target.points, target.x, target.y);
+    ctx.fillText(target.points, target.x, target.y + 3);
 
     // Mini animação ao acertar (pulso neon)
     if (target.hitTimer && target.hitTimer > 0) {
@@ -703,8 +718,30 @@ function drawBumper(bumper) {
 // Física do jogo
 // Desenhar túnel (entrada e saída)
 
+function pointToSegmentDistance(px, py, x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const lenSq = dx * dx + dy * dy;
+
+    if (lenSq === 0) {
+        const sx = px - x1;
+        const sy = py - y1;
+        return Math.sqrt(sx * sx + sy * sy);
+    }
+
+    const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / lenSq));
+    const projX = x1 + t * dx;
+    const projY = y1 + t * dy;
+    const distX = px - projX;
+    const distY = py - projY;
+    return Math.sqrt(distX * distX + distY * distY);
+}
+
 function updatePhysics() {
     if (!gameState.gameActive) return;
+
+    const prevX = ball.x;
+    const prevY = ball.y;
     
     // Gravidade
     ball.vy += 0.20;
@@ -744,8 +781,10 @@ function updatePhysics() {
         const dx = ball.x - target.x;
         const dy = ball.y - target.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
+        const pathDistance = pointToSegmentDistance(target.x, target.y, prevX, prevY, ball.x, ball.y);
+        const hitRadius = ball.radius + target.radius;
         
-        if (distance < ball.radius + target.radius) {
+        if (distance < hitRadius || pathDistance < hitRadius) {
             if (!target.hitTimer || target.hitTimer <= 0) {
                 gameState.score += target.points;
                 updateUI();
@@ -844,8 +883,8 @@ function checkFlipperCollision(flipper) {
         Math.abs(dx) < flipper.width / 2 && 
         Math.abs(dy) < flipper.height * 2) {
         
-        ball.vy = -10.5;
-        ball.vx += (ball.x - flipper.x) * 0.25;
+        ball.vy = FLIPPER_VERTICAL_BOOST;
+        ball.vx += (ball.x - flipper.x) * FLIPPER_HORIZONTAL_BOOST;
         ball.y = flipper.y - ball.radius - flipper.height;
         playSound('flipper');
     }
@@ -900,11 +939,7 @@ function startGame() {
     // Lançamento automático após pequeno atraso (corresponde à mensagem "A bola inicia automaticamente")
     setTimeout(() => {
         if (gameState.gameActive && ball.inLauncher) {
-            ball.inLauncher = false;
-            ball.launched = true;
-            ball.vy = -10.5;
-            ball.vx = (Math.random() - 0.5) * 2.5;
-            playSound('launch');
+            launchBallFromLauncher();
         }
     }, 400);
 
@@ -1022,11 +1057,7 @@ document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         if (gameState.gameActive && ball.inLauncher) {
             e.preventDefault();
-            ball.inLauncher = false;
-            ball.launched = true;
-            ball.vy = -10.5;
-            ball.vx = (Math.random() - 0.5) * 2.5;
-            playSound('launch');
+            launchBallFromLauncher();
         }
     }
 
